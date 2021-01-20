@@ -8,7 +8,7 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 ## Data-Generation
 - Data represents Constellation Received-Signal at the Receiver's End.
 - Data is generated using MatLab Communication ToolBox.
-- Transmitted Signal is modulated with QPSK,1 6-QAM,64-QAM Modulation Schemes.
+- Transmitted Signal is modulated with QPSK, 16-QAM, 64-QAM Modulation Schemes.
 - Signal is passed through Rayleigh's Multi-Path Fading Channel and AWGN for various SNR ratios.
 - For training, SNR = 30dB.
 - For testing, SNR = 5dB, 10dB, 15dB, 20dB, 25dB.
