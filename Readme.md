@@ -12,3 +12,6 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 - Signal is passed through Rayleigh's Multi-Path Fading Channel and AWGN for various SNR ratios.
 - For training, SNR = 30dB.
 - For testing, SNR = 5dB, 10dB, 15dB, 20dB, 25dB.
+
+## Visualisations
+- Visualising generated Data
