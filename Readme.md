@@ -39,9 +39,6 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 
 ## Tasks
 ### Synthetic Datasets
-- Evaluating AWGN Data with Image Classifier of AutoKeras.
-- Adding [-15,-10,-5,0]db SNRs to Rayleigh Data and then Evaluating Results with Image Classifier of AutoKeras.
-- Adding [-15,-10,-5,0]db SNRs to Rayleigh Data and then Evaluating Results using CNN  from the Research Paper.
 - Adding [-15,-10,-5,0]db SNRs to Rayleigh Data and then Evaluating Results using RNN  from the Research Paper.
 
 ### Real Dataset
