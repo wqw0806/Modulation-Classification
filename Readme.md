@@ -38,9 +38,6 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 
 
 ## Tasks
-### Synthetic Datasets
-- Adding [-15,-10,-5,0]db SNRs to Rayleigh Data and then Evaluating Results using RNN  from the Research Paper.
-
 ### Real Dataset
 - Larger Training time for Mathworks Dataset
 - AutoML over RadioML Data.
