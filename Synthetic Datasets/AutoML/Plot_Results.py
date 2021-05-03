@@ -6,16 +6,13 @@ import scipy.io
 import os
 
 # Evaluating Data
-def EvaluateData(Model, X_Train, y_Train, X_Valid, y_Valid, SavePath, ValidBatchSize=32):
+def EvaluateData(Model, X_Valid, y_Valid, SavePath, ValidBatchSize=32):
     Valid_SNR = np.array([-15,-10,-5,0,5,10,15,20,25,30])
     Accuracy = []
 
     print ("Evaluating Model")
     for snr in Valid_SNR:
-        if snr == 30:
-            Loss, Acc = Model.evaluate(X_Train, y_Train, verbose=0)
-        else:
-            Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
+        Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
         print ("SNR:", snr, "Accuracy:", Acc)
         Accuracy.append(Acc)
 
@@ -34,7 +31,7 @@ def EvaluateData(Model, X_Train, y_Train, X_Valid, y_Valid, SavePath, ValidBatch
     
 
 # Plot Results
-def PlotResults(Models,  X_Train, y_Train, X_Valid, y_Valid, SavePath, ValidBatchSize=32):
+def PlotResults(Models, X_Valid, y_Valid, SavePath, ValidBatchSize=32):
 	Model_Accuracies = []
 	Model_Names = []
 	Valid_SNR = np.array([-15,-10,-5,0,5,10,15,20,25,30])
@@ -43,21 +40,13 @@ def PlotResults(Models,  X_Train, y_Train, X_Valid, y_Valid, SavePath, ValidBatc
 		Model_Names.append(ModelName)
 		Accuracy = []
 		for snr in Valid_SNR:
-			if snr == 30:
-				try:
-					Loss, Acc = Model.evaluate(X_Train, y_Train, verbose=0)
-				except:
-					X_Train = X_Train.reshape(-1,100,2)
-					y_Train = y_Train[::100]
-					Loss, Acc = Model.evaluate(X_Train, y_Train, verbose=0)
-			else:
-				try:
-					Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
-				except:
-					X_Valid[snr] = X_Valid[snr].reshape(-1,100,2)
-					y_Valid[snr] = y_Valid[snr][::100]
-					Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
-				
+			try:
+				Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
+			except:
+				X_Valid[snr] = X_Valid[snr].reshape(-1,100,2)
+				y_Valid[snr] = y_Valid[snr][::100]
+				Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
+			
 			Accuracy.append(Acc)
 
 		Model_Accuracies.append(Accuracy)

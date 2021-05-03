@@ -48,7 +48,7 @@ def ImportDatasets(Channel,L=None):
     for i in range(len(Dataset['Classes'])):
         Classes[Dataset['Classes'][i]] = OneHotClasses[i]
 
-    Valid_SNRs = [-15,-10,-5,0,5,10,15,20,25]
+    Valid_SNRs = [-15,-10,-5,0,5,10,15,20,25,30]
 
     if Channel == "AWGN":
         X_Train, y_Train = np.empty((0,2)), np.empty((0,3))
@@ -68,6 +68,9 @@ def ImportDatasets(Channel,L=None):
                     y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
                     X_Train = np.append(X_Train,X,axis=0)
                     y_Train = np.append(y_Train,y,axis=0)
+                    
+                    X_Valid[snr] = X_Train
+                    y_Valid[snr] = y_Train
                 else:
                     X = ModData[snr]
                     y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
@@ -91,6 +94,9 @@ def ImportDatasets(Channel,L=None):
                     y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
                     X_Train = np.append(X_Train,X,axis=0)
                     y_Train = np.append(y_Train,y,axis=0)
+                    
+                    X_Valid[snr] = X_Train
+                    y_Valid[snr] = y_Train
                 else:
                     X = ModData[snr]
                     X = X.reshape(-1,100,2)
