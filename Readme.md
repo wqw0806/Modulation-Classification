@@ -39,7 +39,7 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 - Data is generated for 2200 Frames and for SNR Ratios = [-15,-10,-5,0,5,10,15,20,25,30]dB.
 
 ### RadioML Dataset
-Dataset: RML2016.10b.tar.bz2\
+Dataset: RML2016.10a.tar.bz2, RML2016.10b.tar.bz2 \
 Source of Dataset: [https://www.deepsig.ai/datasets](https://www.deepsig.ai/datasets)
 
 ### Architectures
