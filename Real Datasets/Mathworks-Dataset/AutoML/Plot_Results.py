@@ -41,7 +41,7 @@ def PlotResults(Models, X_Valid, y_Valid, SavePath, ValidBatchSize=32):
 		Accuracy = []
 		for snr in Valid_SNR:
 			try:
-				# FOr CNNs, CLDNNs	
+				# For CNNs, CLDNNs	
 				Loss, Acc = Model.evaluate(X_Valid[snr], y_Valid[snr], batch_size=ValidBatchSize, verbose=0)
 			except:
 				# For RNNs

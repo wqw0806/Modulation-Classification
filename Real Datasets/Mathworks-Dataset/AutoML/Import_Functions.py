@@ -27,13 +27,14 @@ def ImportData(Path):
 
 # Train and Validation Datasets
 """
+SNRs = [-15,-10,-5,0,5,10,15,20,25,30]dB
 Training:
-Received Signal with SNR Ratio  30 dB is used for Training for both Channels and all Modulation Schemes.
+Model is trained on all SNR Ratios
 
 Validation:
-AutoML is validated on Received Signals with SNR Ratio's (in dB)  [−15,−10,−5,0,5,10,15,20,25]
+Model is evaluated on all SNR Ratios
 """
-def ImportDatasets(Channel,L=None):
+def ImportDatasets(Channel,L=None,test_size=(1/11)):
 	if Channel == "Rician":
 		Path =  "../Data/" + Channel
 	Data = ImportData(Path)
@@ -49,49 +50,29 @@ def ImportDatasets(Channel,L=None):
 	Valid_SNRs = [-15,-10,-5,0,5,10,15,20,25,30]
 
 	if Channel == "Rician":
-		X_Train, y_Train = np.empty((0,1,1024,2)), np.empty((0,3))
+		X_Train, y_Train = [],[]
 		X_Valid, y_Valid = {}, {}
-		for snr in Valid_SNRs:
-			X_Valid[snr] = np.empty((0,1,1024,2))
-			y_Valid[snr] = np.empty((0,3))
 
-		for c in Classes.keys():
-			ModData = Data[c]
-			SNRs = ModData.keys()
-			for snr in SNRs:
-				if snr == 30:
-					X = ModData[snr]
-					y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
-					X_Train = np.append(X_Train,X,axis=0)
-					y_Train = np.append(y_Train,y,axis=0)
+		for snr in Valid_SNRs:
+			X_Valid[snr] = []
+			y_Valid[snr] = []
+			for modType in Classes.keys():
+				data = Data[modType][snr]
+				N = int(test_size*data.shape[0])
+				
+				train = data[N:]
+				valid = data[:N]
+				
+				X_Train.append(train)
+				X_Valid[snr].append(valid)
+				
+				y_Train.append(np.repeat(np.expand_dims(Classes[modType],axis=0),train.shape[0],axis=0))
+				y_Valid[snr].append(np.repeat(np.expand_dims(Classes[modType],axis=0),valid.shape[0],axis=0))
+			
+			X_Valid[snr] = np.array(X_Valid[snr]).reshape(-1,1,1024,2)
+			y_Valid[snr] = np.array(y_Valid[snr]).reshape(-1,3)
 					
-					X_Valid[snr] = X_Train
-					y_Valid[snr] = y_Train
-				else:
-					X = ModData[snr]
-					y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
-					X_Valid[snr] = np.append(X_Valid[snr], X, axis=0)
-					y_Valid[snr] = np.append(y_Valid[snr], y, axis=0)
+		X_Train = np.array(X_Train).reshape(-1,1,1024,2)
+		y_Train = np.array(y_Train).reshape(-1,3)
 					
 	return X_Train, y_Train, X_Valid, y_Valid
-	
-	
-
-# Splitting Data with all SNRs
-def SplitData(X_train, y_train, X_valid, y_valid,test_size):
-	X_Valid = {}
-	y_Valid = {}
-	X_Train,X_Test,y_Train,y_Test = train_test_split(X_train,y_train,test_size=test_size,stratify=y_train)
-	X_Valid[30] = X_Test
-	y_Valid[30] = y_Test
-
-	for snr in [-15,-10,-5,0,5,10,15,20,25]:
-		xtrain,xtest,ytrain,ytest = train_test_split(X_valid[snr],y_valid[snr],test_size=test_size,stratify=y_valid[snr])
-        
-		X_Train = np.append(X_Train,xtrain,axis=0)
-		y_Train = np.append(y_Train,ytrain,axis=0)
-
-		X_Valid[snr] = xtest
-		y_Valid[snr] = ytest
-
-	return X_Train,y_Train,X_Valid,y_Valid
