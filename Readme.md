@@ -27,8 +27,7 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 - AutoML ImageClassifier, AutoML Customised RNN, CNN form Reseach Paper.
 
 ### Training and Testing
-- For Training, SNR = 30dB.
-- For Testing, SNR = -15db, -10dB, -5dB, 0dB, 5dB, 10dB, 15dB, 20dB, 25dB.
+- Dataset is split into Training and Testing sets. Both sets have Received Signals of all SNR Ratios.
 - Training and Testing on Synthetic Datasets is complete.
 
 ## Real Datasets
