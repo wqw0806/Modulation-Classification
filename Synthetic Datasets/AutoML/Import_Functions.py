@@ -27,81 +27,81 @@ def ImportData(Path):
 
 # Train and Validation Datasets
 """
+SNRs = [-15,-10,-5,0,5,10,15,20,25,30]dB
 Training:
-Received Signal with SNR Ratio  30 dB is used for Training for both Channels and all Modulation Schemes.
+Model is trained on all SNR Ratios
 
 Validation:
-AutoML is validated on Received Signals with SNR Ratio's (in dB)  [−15,−10,−5,0,5,10,15,20,25]
+Model is evaluated on all SNR Ratios
 """
-def ImportDatasets(Channel,L=None):
-    if Channel == "AWGN":
-        Path =  "../Data/" + Channel
-    elif Channel == "Rayleigh":
-        Path = "../Data/" + Channel + "/" + str(L)
-    Data = ImportData(Path)
+def ImportDatasets(Channel,L=None,test_size=0.2):
+	if Channel == "AWGN":
+		Path =  "../Data/" + Channel
+	elif Channel == "Rayleigh":
+		Path = "../Data/" + Channel + "/" + str(L)
+	Data = ImportData(Path)
     
-    Dataset = {}
-    Dataset['Classes'] = list(Data.keys())
-    OneHotClasses = np.eye(len(Dataset['Classes']))
+	Dataset = {}
+	Dataset['Classes'] = list(Data.keys())
+	OneHotClasses = np.eye(len(Dataset['Classes']))
 
-    Classes = {}
-    for i in range(len(Dataset['Classes'])):
-        Classes[Dataset['Classes'][i]] = OneHotClasses[i]
+	Classes = {}
+	for i in range(len(Dataset['Classes'])):
+		Classes[Dataset['Classes'][i]] = OneHotClasses[i]
 
-    Valid_SNRs = [-15,-10,-5,0,5,10,15,20,25,30]
+	Valid_SNRs = [-15,-10,-5,0,5,10,15,20,25,30]
 
-    if Channel == "AWGN":
-        X_Train, y_Train = np.empty((0,2)), np.empty((0,3))
-        X_Valid, y_Valid = {}, {}
+	if Channel == "AWGN":
+		X_Train, y_Train = [],[]
+		X_Valid, y_Valid = {}, {}
 
-        for snr in Valid_SNRs:
-            X_Valid[snr] = np.empty((0,2))
-            y_Valid[snr] = np.empty((0,3))
+		for snr in Valid_SNRs:
+			X_Valid[snr] = []
+			y_Valid[snr] = []
+			for modType in Classes.keys():
+				data = Data[modType][snr]
+				N = int(test_size*data.shape[0])
+				
+				train = data[N:]
+				valid = data[:N]
+				
+				X_Train.append(train)
+				X_Valid[snr].append(valid)
+				
+				y_Train.append(np.repeat(np.expand_dims(Classes[modType],axis=0),train.shape[0],axis=0))
+				y_Valid[snr].append(np.repeat(np.expand_dims(Classes[modType],axis=0),valid.shape[0],axis=0))
+			
+			X_Valid[snr] = np.array(X_Valid[snr]).reshape(-1,2)
+			y_Valid[snr] = np.array(y_Valid[snr]).reshape(-1,3)
+		
+		X_Train = np.array(X_Train).reshape(-1,2)
+		y_Train = np.array(y_Train).reshape(-1,3)
+		
+		
+	if Channel == "Rayleigh":
+		X_Train, y_Train = [],[]
+		X_Valid, y_Valid = {}, {}
 
-
-        for c in Classes.keys():
-            ModData = Data[c]
-            SNRs = ModData.keys()
-            for snr in SNRs:
-                if snr == 30:
-                    X = ModData[snr]
-                    y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
-                    X_Train = np.append(X_Train,X,axis=0)
-                    y_Train = np.append(y_Train,y,axis=0)
-                    
-                    X_Valid[snr] = X_Train
-                    y_Valid[snr] = y_Train
-                else:
-                    X = ModData[snr]
-                    y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
-                    X_Valid[snr] = np.append(X_Valid[snr], X, axis=0)
-                    y_Valid[snr] = np.append(y_Valid[snr], y, axis=0)
-
-    elif Channel == "Rayleigh":
-        X_Train, y_Train = np.empty((0,100,2)), np.empty((0,3))
-        X_Valid, y_Valid = {}, {}
-        for snr in Valid_SNRs:
-            X_Valid[snr] = np.empty((0,100,2))
-            y_Valid[snr] = np.empty((0,3))
-
-        for c in Classes.keys():
-            ModData = Data[c]
-            SNRs = ModData.keys()
-            for snr in SNRs:
-                if snr == 30:
-                    X = ModData[snr]
-                    X = X.reshape(-1,100,2)
-                    y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
-                    X_Train = np.append(X_Train,X,axis=0)
-                    y_Train = np.append(y_Train,y,axis=0)
-                    
-                    X_Valid[snr] = X_Train
-                    y_Valid[snr] = y_Train
-                else:
-                    X = ModData[snr]
-                    X = X.reshape(-1,100,2)
-                    y = np.repeat(np.expand_dims(Classes[c],axis=0), X.shape[0], axis=0)
-                    X_Valid[snr] = np.append(X_Valid[snr], X, axis=0)
-                    y_Valid[snr] = np.append(y_Valid[snr], y, axis=0)
-
-    return X_Train, y_Train, X_Valid, y_Valid
+		for snr in Valid_SNRs:
+			X_Valid[snr] = []
+			y_Valid[snr] = []
+			for modType in Classes.keys():
+				data = Data[modType][snr]
+				N = int(test_size*data.shape[0])
+				
+				train = data[N:].reshape(-1,100,2)
+				valid = data[:N].reshape(-1,100,2)
+				
+				X_Train.append(train)
+				X_Valid[snr].append(valid)
+				
+				y_Train.append(np.repeat(np.expand_dims(Classes[modType],axis=0),train.shape[0],axis=0))
+				y_Valid[snr].append(np.repeat(np.expand_dims(Classes[modType],axis=0),valid.shape[0],axis=0))
+			
+			X_Valid[snr] = np.array(X_Valid[snr]).reshape(-1,100,2)
+			y_Valid[snr] = np.array(y_Valid[snr]).reshape(-1,3)
+		
+		X_Train = np.array(X_Train).reshape(-1,100,2)
+		y_Train = np.array(y_Train).reshape(-1,3)	
+		
+	return X_Train, y_Train, X_Valid, y_Valid
