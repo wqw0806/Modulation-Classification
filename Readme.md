@@ -16,6 +16,7 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 - Data represents Constellation Received-Signal at the Receiver's End.
 - Data is generated using Basic MatLab Commands.
 - Modulation Schemes: QPSK, 16-QAM, 64-QAM.
+- SNR Ratios = [-15,-10,-5,0,5,10,15,20,25,30]dB.
 - Signal is passed through Rayleigh's Multi-Path Fading Channel and AWGN for various SNR ratios.
 - For Rayleigh Multi-Path Fading, ChannelLengths = [2,3] are considered. Channel Model is changed for each and every SNR Ratio.
 
@@ -41,16 +42,21 @@ Detecting the Modulation Scheme of Received Signal using AutoML Techniques.
 ### RadioML Dataset
 Dataset: RML2016.10a.tar.bz2, RML2016.10b.tar.bz2 \
 Source of Dataset: [https://www.deepsig.ai/datasets](https://www.deepsig.ai/datasets)
+- All Modulation Schemes and SNRs of the RadioML Dataset are considered for Training and Testing.
 
 ### Architectures
-- AutoML Customised CNN, AutoML Customised RNN, AutoML Customised CLDNN, CNN from Mathworks Example.
+- AutoML Customised CNN, AutoML Customised RNN, AutoML Customised CLDNN, CNN from Mathworks Example for Mathworks Datset.
+- AutoML Customised CNN, AutoML Customised RNN, AutoML Customised CLDNN, AutoML ResNet Model for RadioML Dataset.
 
 ### Training and Testing
+
 #### For Mathworks Dataset
 - 2000 Frames of Data for each SNR of each Modulation Scheme is used for Training the Model and 200 Frames of Data for each SNR of each Modulation Scheme is used for Testing the Model.
-- Results of Training and Testing on Mathworks Dataset is complete.
+- Training and Testing on Mathworks Dataset is complete.
+
 #### For RadioML Dataset
-- Training and Testing on Mathworks Dataset is going on. Intermediate Results and Models are saved.
+- Data of each SNR of every Modulation Scheme is split such that 80% of it is used for Training and 20% of it is used for Testing.
+- Training and Testing on RadioML Dataset: RML2016.10a is complete.
 
 
 **Note:**

@@ -1,2 +1,6 @@
 # RadioML Dataset #
-*.pkl
+Real Datasets/RadioML-Dataset/Data/RML2016.10a/RML2016.10a_dict.pkl
+Real Datasets/RadioML-Dataset/Data/RML2016.10b/RML2016.10b.dat
+
+# RadioML ResNet Model #
+Real Datasets/RadioML-Dataset/Models/RadioML_ResNet.h5
